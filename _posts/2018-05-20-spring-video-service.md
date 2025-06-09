@@ -25,11 +25,11 @@ To begin with, let's investigate how the `<video>` element works and what reques
 a server. For example, [w3c has an overview](https://www.w3schools.com/html/html5_video.asp) of this html element with the one embedded. 
 The very first request sent to service is as follows:
 
-```sh
+{% shiki bash %}
 GET https://www.w3schools.com/html/mov_bbb.mp4
 Range: bytes=0-
 ...
-```
+{% endshiki %}
 
 Generally speaking, it is a simple http GET request. The only additional piece of data that matters is
 the `Range` header. It comes from the [Range Requests specification](https://tools.ietf.org/html/rfc723) and
@@ -43,12 +43,12 @@ resource in one request.
 * Status: 206 Partial Content. In this case server confirms its ability to respond to range requests.
 Here are the headers we are interested in:
 
-```sh
+{% shiki bash %}
 Status: 206
 Accept-ranges: bytes
 Content-Length: 100
 Content-Range: bytes 0-99/788493
-```
+{% endshiki %}
 
 Lets have a closer look at them:
 1. `Accept-ranges: bytes`. This one says which range unit is being  used. The most common is _bytes_
@@ -76,7 +76,7 @@ The following code is based on the **mvc** branch of my [sample project](https:/
 and you can find project dependencies in _build.gradle_ file.
 Here is the only piece of code you need to implement your video server:
 
-```kotlin
+{% shiki kotlin %}
 @GetMapping("/videos/{name}/full")
 fun getFullVideo(@PathVariable name: String): ResponseEntity<UrlResource> {
 	val video = UrlResource("file:$videoLocation/$name")
@@ -86,7 +86,7 @@ fun getFullVideo(@PathVariable name: String): ResponseEntity<UrlResource> {
 					.orElse(MediaType.APPLICATION_OCTET_STREAM))
 			.body(video)
 }
-```
+{% endshiki %}
 
 The purpose of the controller send files to client. Let's explore it line by line:
 * **@GetMapping** obviously means that we're handling GET http requests
@@ -104,11 +104,11 @@ If the MIME cannot be determined, the content type is specified as byte stream.
 
 The only thing left to make it a full-blown video player is a bit of html :)
 
-```html
+{% shiki html %}
 <video autoplay="autoplay" controls>
     <source src="/videos/fish.mp4/full" type="video/mp4">
 </video>
-```
+{% endshiki %}
 
 This section shows how simple it is to make a file server leveraging Spring.
 While I'm using UrlResource, anybody can implement their own [Resource](https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/core/io/Resource.java)
@@ -125,9 +125,9 @@ of MVC is a classical one-per-user thread model. It can be easily observed with 
 
 Let's perform two requests to our server using curl (in separate terminal windows):
 
-```sh
+{% shiki bash %}
 curl -s -o /dev/null -H "Range: bytes=0-" -D - http://localhost:8080/videos/fish.mp4/full
-```
+{% endshiki %}
 
 Everything works as expected and both loads finish. The threads view shows that for the load period 
 two threads were occupied (green part of line) reading data from resource and writing to output stream (see [StreamUtils.copy](https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/StreamUtils.java#L132)).
@@ -170,7 +170,7 @@ This way, threads will be used for smaller amounts of time giving opportunity to
 Thanks to the [ResourceRegion](https://jira.spring.io/browse/SPR-14221) abstraction introduced in Spring version 4.3RC1
 developer can now specify the range of bytes to be returned to the client.
 
-```kotlin
+{% shiki kotlin %}
 @GetMapping("/videos/{name}")
 fun getVideo(@PathVariable name: String, 
 	     @RequestHeader headers: HttpHeaders): ResponseEntity<ResourceRegion> {
@@ -196,7 +196,7 @@ private fun resourceRegion(video: UrlResource, headers: HttpHeaders): ResourceRe
 		ResourceRegion(video, 0, rangeLength)
 	}
 }
-``` 
+{% endshiki %} 
 
 There are several additions worth to mention:
 * **_HttpHeaders_** are added to the controller to get the range header
@@ -232,14 +232,14 @@ The response body of resource in MVC was represented as java.io.InputStream.
 Consequently, to get data from a file and write it to a user connection we need to have a buffer,
 fill it with data from the file and only then write to the connection. 
 
-```java
+{% shiki java %}
 InputStream in = ??? // file stream
 OutputStream out = ??? // socket connection stream
 
 byte[] buffer = new byte[BUFFER_SIZE];
 int bytesRead = in.read(buffer);
 out.write(buffer, 0, bytesRead);
-```  
+{% endshiki %}  
 
 The main deficiency of this technique is read operations are blocking and hang until the buffer is fully read.
 
@@ -256,7 +256,7 @@ Fortunately, WebFlux api is mostly compatible with MVC and we only need to chang
 to make things work. The [webflux](https://github.com/melgenek/spring-video-service/tree/webflux) branch of my sample repo 
 shows the dependencies needed. The code is left the same as in the MVC section of this article:
 
-```kotlin
+{% shiki kotlin %}
 @GetMapping("/videos/{name}/full")
 fun getFullVideo(@PathVariable name: String): ResponseEntity<UrlResource> {
 	val video = UrlResource("file:$videoLocation/$name")
@@ -266,14 +266,14 @@ fun getFullVideo(@PathVariable name: String): ResponseEntity<UrlResource> {
 					.orElse(MediaType.APPLICATION_OCTET_STREAM))
 			.body(video)
 }
-```
+{% endshiki %}
 
 Now we're ready to repeat the experiment with only one thread available.
 Set the property `reactor.ipc.netty.workerCount=1` and call curl twice:
 
-```sh
+{% shiki bash %}
 curl -s -o /dev/null -H "Range: bytes=0-" -D - http://localhost:8080/videos/fish.mp4/full
-```
+{% endshiki %}
 
 This time both files are loaded at the same time without the need to wait in a queue.
 I'd like to give you some intuition into how this works internally.

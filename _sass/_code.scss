@@ -68,3 +68,7 @@ pre a:last-of-type::before {
 pre a:only-of-type::before {
   padding: 10px;
 }
+
+pre.shiki.everforest-light {
+  border-radius: 14px;
+}

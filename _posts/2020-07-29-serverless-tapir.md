@@ -25,7 +25,7 @@ Introduction
 [Tapir](https://tapir.softwaremill.com/en/latest/index.html) is an amazing scala framework that allows defining
 http endpoints as scala values. Let's look at the example that I borrowed from the official documentation: 
 
-```scala
+{% shiki scala %}
 import sttp.tapir._
 import sttp.tapir.json.circe._
 import io.circe.generic.auto._
@@ -43,7 +43,7 @@ val booksListing: Endpoint[(BooksFromYear, Limit, AuthToken), String, List[Book]
     .in(header[AuthToken]("X-Auth-Token"))
     .errorOut(stringBody)
     .out(jsonBody[List[Book]])
-```
+{% endshiki %}
 
 This is a representation of a single endpoint with a noticeable feature that it does not have any logic attached.
 The endpoint is solely a description of input parameters and outputs like response bodies.
@@ -51,7 +51,7 @@ The endpoint is solely a description of input parameters and outputs like respon
 In order to make this definition runnable, we have to use an interpreter. 
 Here is an example implementation in akka-http:
 
-```scala
+{% shiki scala %}
 import sttp.tapir.server.akkahttp._
 import akka.http.scaladsl.server.Route
 import scala.concurrent.Future
@@ -60,7 +60,7 @@ val booksListingRoute: Route =
     booksListing.toRoute { case (bfy: BooksFromYear, limit: Limit, at: AuthToken) =>
       Future.successful(Right(List(Book("The Sorrows of Young Werther"))))
     }
-```  
+{% endshiki %}  
 
 The logic of the route is generic, there is no explicit use of the akka-http response codes or marshallers.
 There are in fact many options of server interpreters such as play, http4s, finatra and vert.x.
@@ -90,7 +90,7 @@ that correspond to the Http API request and response models.
 
 As mentioned above the implementation starts mapping the `APIGatewayV2HTTPEvent` into Tapir's `ServerRequest`.
 
-```scala
+{% shiki scala %}
 class HttpApiServerRequest(event: APIGatewayV2HTTPEvent) extends ServerRequest {
   def method: Method = Method(event.getRequestContext.getHttp.getMethod.toUpperCase)
 
@@ -109,7 +109,7 @@ class HttpApiServerRequest(event: APIGatewayV2HTTPEvent) extends ServerRequest {
   
   def header(name: String): Option[String] = event.getHeaders.getIgnoreCase(name)
 }
-```
+{% endshiki %}
 
 A couple of moments are worth clarification here. 
 
@@ -121,7 +121,7 @@ The communication to Http API is always secure.
 The next step after defining the server request is the `DecodeInputsContext`. 
 As the name suggests, this class is used by Tapir during the inputs extraction. 
 
-```scala
+{% shiki scala %}
 class HttpApiDecodeInputsContext(event: APIGatewayV2HTTPEvent, pathConsumed: Int = 0) extends DecodeInputsContext {
   def method: Method = Method(event.getRequestContext.getHttp.getMethod.toUpperCase)
 
@@ -153,7 +153,7 @@ class HttpApiDecodeInputsContext(event: APIGatewayV2HTTPEvent, pathConsumed: Int
 
   def serverRequest: ServerRequest = new HttpApiServerRequest(event)
 }
-```   
+{% endshiki %}   
 
 Multivalued headers and query params are combined with commas in Http API. So we split them back into a `List`.
 
@@ -164,9 +164,9 @@ Now that we know how to map the lambda input into the input that Tapir understan
 The same way akka http has `akka.http.scaladsl.server.Route`, or http4s has `org.http4s.HttpRoutes`, we will also
 have a `Route` type:
 
-```scala
+{% shiki scala %}
 type Route = PartialFunction[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse]
-``` 
+{% endshiki %} 
 
 Tapir also requires a `MonadError` implementation. For akka http there is an instance of a `MonadError` based on `Future`.
 That's why the akka http routes return `Futures` as results. A lambda function that runs on top of the Lambda Java runtime requires
@@ -174,7 +174,7 @@ functions to be simple blocking functions with a signature `def onEvent(event: A
 I chose `Try` to be the result type of the Lambda logic. The example conversion of a function with some business logic
 into a Lambda route would be:
 
-```scala
+{% shiki scala %}
 import scala.util.{Success, Try}
 import sttp.tapir.server.httpapi._  
 
@@ -183,26 +183,26 @@ def logic(bfy: BooksFromYear, limit: Limit, at: AuthToken): Try[Either[String, L
 }
 val serverEndpoint = bookListing.serverLogic((logic _).tupled)
 val booksListingRoute: Route = serverEndpoint.toRoute
-```
+{% endshiki %}
 
 The `Route` is a partial function. If the http request matches the Tapir endpoint definition then we execute the logic for
 this endpoint. If no then we try another route. This check is expressed via the `isDefinedAt` method of the partial function.
 We use the `sttp.tapir.server.internal.DecodeInputs`, pass the context and let Tapir parse the request for us.
 
-```scala
+{% shiki scala %}
 def isDefinedAt(event: APIGatewayV2HTTPEvent): Boolean = {
   DecodeInputs(e.input, new HttpApiDecodeInputsContext(event)) match {
     case _: DecodeInputsResult.Values => true
     case _: DecodeInputsResult.Failure => false
   }
 }
-```
+{% endshiki %}
 
 When the http request matches our endpoint, it's time to run the actual application logic. The result of the `DecodeInputs`
 is just a sequence of values. Thus, we map these values into scala classes, so that we get a tuple of case classes,
 like `(BooksFromYear, Limit, AuthToken)` in the example above. This conversion is the responsibility of `sttp.tapir.server.internal.InputValues`.
 
-```scala
+{% shiki scala %}
 def apply(event: APIGatewayV2HTTPEvent): APIGatewayV2HTTPResponse = {
   DecodeInputs(e.input, new HttpApiDecodeInputsContext(event)) match {
     case values: DecodeInputsResult.Values =>
@@ -213,11 +213,11 @@ def apply(event: APIGatewayV2HTTPEvent): APIGatewayV2HTTPResponse = {
     case DecodeInputsResult.Failure(input, failure) => handleDecodeFailure(input, failure)
   }
 }
-```
+{% endshiki %}
 
 The next step, after the inputs are successfully parsed, is to pass these inputs into the user-defined logic. 
 
-```scala
+{% shiki scala %}
 def valueToResponse(value: Any): APIGatewayV2HTTPResponse = {
   endpoint.logic(TryMonadError)(value.asInstanceOf[I]) match {
     case Success(Right(result)) => OutputToHttpApiResponse(ServerDefaults.StatusCodes.success, endpoint.output, result)
@@ -225,7 +225,7 @@ def valueToResponse(value: Any): APIGatewayV2HTTPResponse = {
     case Failure(e) => OutputToHttpApiResponse(StatusCode.InternalServerError, e.getMessage)
   }
 }
-```
+{% endshiki %}
 
 The only thing left is to map the Tapir's output to the response type that Http API understands. 
 This is what `OutputToHttpApiResponse` does in the `valueToResponse` method. The implementation requires some lines of code and 
@@ -235,7 +235,7 @@ We put the functionality that is described in the `toRoute` function.
 The `Route` is a partial function, so we can compose multiple routes into a single one via the `orElse` method.
 If none of the routes matches the request, we use the predefined `EmptyRoute` that answers with the 404 response code.
  
-```scala
+{% shiki scala %}
 implicit class RichHttpApiServerEndpoint[I, E, O](endpoint: ServerEndpoint[I, E, O, Nothing, Try]) {
   def toRoute: Route = {
     // the partial function that is described above
@@ -249,12 +249,12 @@ implicit class RichHttpApiServerEndpoints[I, E, O](serverEndpoints: List[ServerE
       .foldRight(EmptyRoute)(_ orElse _)
   }
 }
-```
+{% endshiki %}
 
 Let's also provide an interface that has to be implemented in order to have a complete lambda. This interface requires
 a list of `ServerEndpoints` and then uses these endpoints to process a request.
 
-```scala
+{% shiki scala %}
 trait HttpApiFunction {
   val serverEndpoints: List[ServerEndpoint[_, _, _, Nothing, Try]]
   def onEvent(event: APIGatewayV2HTTPEvent): APIGatewayV2HTTPResponse = {
@@ -265,7 +265,7 @@ trait HttpApiFunction {
 object BookFunction extends HttpApiFunction {
   override val serverEndpoints = List(booksListingRoute)
 }
-```
+{% endshiki %}
 
 Lambdas will have the handler that points to the `your.package.BookFunction::onEvent`. The class will be instantiated
 by the Java runtime and the `onEvent` function will be invoked for every http request.
@@ -278,7 +278,7 @@ I am not using lambda layers, so the Lambda function has to contain all of the d
 The fat jar is packaged using the `sbt-assembly` plugin. The only interesting part of this process is the merge conflict resolution.
 The reference configurations are concatenated, and some files with conflict names are discarded.
 
-```scala
+{% shiki scala %}
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", _@_*) => MergeStrategy.discard
   case PathList(ps@_*) if ps.last endsWith "reference-overrides.conf" => MergeStrategy.concat
@@ -287,7 +287,7 @@ assemblyMergeStrategy in assembly := {
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
 }
-```  
+{% endshiki %}  
 
 Deployment
 -------------------
@@ -304,27 +304,27 @@ CloudFormation then makes sure that the infrastructure is created in AWS.
 Let's create a function that receives an `HttpApiFunction` and the name of the Lambda function. This function creates a so-called `App`,
 that contains all the resources. Then it synthesizes the Cloudformation template based on the code.
 
-```scala
+{% shiki scala %}
 def deploy(httpApiFunction: HttpApiFunction, title: String): Unit = {
   val app = new awscdk.core.App()
   ...
   app.synth()
 }
-```
+{% endshiki %}
 
 All the resources have scopes. The top-level scope is the `App`. Each app is a set of `Stacks`. Every `Stack` corresponds to a Cloudformation
 stack. For us, it is enough to create a single Stack.
 
-```scala
+{% shiki scala %}
 val stack = new Stack(app, s"$title-stack")
-``` 
+{% endshiki %} 
 
 The first meaningful resource that we create is the lambda function. It is a lambda that is based on the Java 8 runtime.
 It sets the handler method to be the `def onEvent(event: APIGatewayV2HTTPEvent): APIGatewayV2HTTPResponse` of our lambda class.
 Additionally, we set the local path of the fat jar file that we have bundled. This jar is automatically uploaded by CDK into an s3 bucket.
 Then this s3 object is used as the source for the lambda function.
 
-```scala
+{% shiki scala %}
 val function = lambda.Function.Builder.create(stack, s"$title-lambda")
   .memorySize(192)
   .timeout(Duration.seconds(30))
@@ -333,31 +333,31 @@ val function = lambda.Function.Builder.create(stack, s"$title-lambda")
   .handler(s"${httpApiFunction.getClass.getName.replace("$", "")}::onEvent")
   .code(Code.fromAsset("lambda/target/scala-2.13/assembly.jar"))
   .build()
-```
+{% endshiki %}
 
 After the lambda is present, we create the API Gateway Http API.
 
-```scala
+{% shiki scala %}
 val api = HttpApi.Builder.create(stack, s"$title-api")
   .apiName(title)
   .build()
-```
+{% endshiki %}
 
 After both lambda and API are set up, we need to bind them together so that Http API passes the requests into lambda.
 For this to happen, we create a Lambda integration.
 
-```scala
+{% shiki scala %}
 val integration = LambdaProxyIntegration.Builder.create()
   .handler(function)
   .payloadFormatVersion(PayloadFormatVersion.VERSION_2_0)
   .build()
-``` 
+{% endshiki %} 
 
 The last step is to define all the http routes and point them to the same lambda function.
 Tapir's ability to transform endpoints into Open API helps us construct the routes. For every path in the Open API specification,
 we create a route in the Http API.
 
-```scala
+{% shiki scala %}
 import sttp.tapir.docs.openapi._
 private def apiRoutes(httpApiFunction: HttpApiFunction, integration: LambdaProxyIntegration): List[AddRoutesOptions] = {
   val openAPI = httpApiFunction.serverEndpoints.map(_.endpoint).toOpenAPI("any name", "v1")
@@ -375,35 +375,35 @@ private def apiRoutes(httpApiFunction: HttpApiFunction, integration: LambdaProxy
     }
     .toList
 }
-```
+{% endshiki %}
 
 That's it. Now we pass our lambda class into the deployment function, run the `cdk deploy` command in the terminal,
 and after a short time, our code is up and running in AWS. 
 
-```scala
+{% shiki scala %}
 object Main extends App {
   HttpApiCdkServer.deploy(BookFunction, "my-bookshop")
 }
-```
+{% endshiki %}
 
 Cdk also allows adding outputs into stacks. One of such outputs can be the url of the Http API that we deployed.
 
-```scala
+{% shiki scala %}
 CfnOutput.Builder.create(stack, "api-url").exportName("url").value(api.getUrl).build()
-```
+{% endshiki %}
 
 This output is shown after the `cdk deploy` succeeds.
 
-```sh
+{% shiki bash %}
 ✅  my-bookshop-stack
 
 Outputs:
 my-bookshop-stack.apiurl = https://2qpnchfg11.execute-api.us-east-1.amazonaws.com/
-```
+{% endshiki %}
 
 Calling this url results in the request being handled by our lambda that is described above.
 
-```sh
+{% shiki bash %}
 curl -v -H "X-Auth-Token: Bearer token"  https://2qpnchfg11.execute-api.us-east-1.amazonaws.com/books/novel/2020?limit=10
 
 Result:
@@ -412,7 +412,7 @@ Result:
     "title": "The Sorrows of Young Werther"
   }
 ]
-```
+{% endshiki %}
 
 Summary
 -------------------

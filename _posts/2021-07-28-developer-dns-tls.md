@@ -29,15 +29,15 @@ that issues certificates that are valid in all the browsers.
 [CertBot](https://certbot.eff.org/) is a tool that is usually used to pass ACME challenges on a wide variety of server platforms.
 Fortunately for us, [there is a docker container](https://github.com/maksimstojkovic/docker-letsencrypt) dedicated to getting certificates at Let's Encrypt for DuckDNS domains.
 The usage is as easy as running this command in the terminal:
-   
-```shell
+
+{% shiki bash %}
 docker run -it --rm \
 -e DUCKDNS_TOKEN="396db3e9-5ecc-4d0c-a708-70a926b1389c" \
 -e DUCKDNS_DOMAIN="melgenek.duckdns.org" \
 -v `pwd`/melgenek_certs:/etc/letsencrypt \
 maksimstojkovic/letsencrypt:latest
-```
-   
+{% endshiki %}
+
 In the `docker run` we specified the token that DuckDNS provides for accessing their API and my domain.
 As a result of running this command the ACME challenge is succeeds,
 and the volume attached to the container contains the certificates.
@@ -52,22 +52,22 @@ In order to get the understanding of what the ACME flow looks like, let's genera
 After passing the challenge, Let's Encrypt is sure that the domain is ours and gives us a certificate.
 
 The first step is to start the CertBot flow. The CertBot is installed as [a standalone binary](https://certbot.eff.org/docs/install.html) 
-and can be run from terminal. The command specifies for which domain we want to pass the DNS challenge and where to store the certificates.   
+and can be run from terminal. The command specifies for which domain we want to pass the DNS challenge and where to store the certificates.
 
-```shell
+{% shiki bash %}
 certbot certonly --manual \
-   --preferred-challenges dns \
-   --register-unsafely-without-email \
-   -d "melgenek.duckdns.org" \
-   --work-dir "./melgenek_certs/work_dir" \
-   --logs-dir "./melgenek_certs/logs_dir" \
-   --config-dir "./melgenek_certs/config_dir" \
-   --agree-tos
-```
+    --preferred-challenges dns \
+    --register-unsafely-without-email \
+    -d "melgenek.duckdns.org" \
+    --work-dir "./melgenek_certs/work_dir" \
+    --logs-dir "./melgenek_certs/logs_dir" \
+    --config-dir "./melgenek_certs/config_dir" \
+    --agree-tos
+{% endshiki %}
 
 As a result of the running the command CertBot generates a secret value and asks us to put it into the DNS record.
 
-```shell
+{% shiki bash %}
 Please deploy a DNS TXT record under the name
 _acme-challenge.melgenek.duckdns.org with the following value:
 
@@ -76,26 +76,26 @@ NaM0ODwHZfL6b1pjM_rrgfCSwVcy_CALKkxR2YzyE7A
 Before continuing, verify the record is deployed.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Press Enter to Continue
-```
+{% endshiki %}
 
 CertBot proposes to set the TXT record at the `_acme-challenge.melgenek.duckdns.org` subdomain. 
 The validation of such a record would result in issuing a wildcard certificate for `*.melgenek.duckdns.org`.
 We are setting the TXT record for the domain itself so that the certificate is valid only for the `melgenek.duckdns.org` domain.
 The next cUrl call creates the TXT record in DuckDns. 
 
-```shell
+{% shiki bash %}
 curl "https://www.duckdns.org/update?domains=melgenek.duckdns.org&token=396db3e9-5ecc-4d0c-a708-70a926b1389c&txt=NaM0ODwHZfL6b1pjM_rrgfCSwVcy_CALKkxR2YzyE7A"
-```
+{% endshiki %}
 
 Before proceeding with the ACME challenge, we can check that the DNS record is actually set using `dig`. 
 In the lookup result we see that the TXT record is exactly what we expect it to be.
 
-```shell
+{% shiki bash %}
 dig melgenek.duckdns.org TXT
 
 ;; ANSWER SECTION:
 melgenek.duckdns.org.   59      IN      TXT     "NaM0ODwHZfL6b1pjM_rrgfCSwVcy_CALKkxR2YzyE7A"
-```
+{% endshiki %}
 
 Clicking "Enter" in the terminal where CertBot is waiting for input would trigger Let's Encrypt validation of the TXT record.
 Passing this validation successfully produces certificates the specified folder `./melgenek_certs/config_dir/live/melgenek.duckdns.org`
@@ -103,9 +103,9 @@ Passing this validation successfully produces certificates the specified folder 
 The challenge secret is a not reused in the future, so it makes sense to clean up the TXT record. 
 This is done by adding the `clear=true` query param to the previous cUrl query.  
 
-```shell
+{% shiki bash %}
 curl "https://www.duckdns.org/update?domains=melgenek.duckdns.org&token=396db3e9-5ecc-4d0c-a708-70a926b1389c&txt=NaM0ODwHZfL6b1pjM_rrgfCSwVcy_CALKkxR2YzyE7A&clear=true"
-```
+{% endshiki %}
 
 Summary
 -------------------

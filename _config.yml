@@ -3,7 +3,7 @@ title:       melgenek
 author:      Yev Melnyk
 description: "melgenek's blog"
 baseurl:     ""
-url:         "https://melgenek.github.io"
+url:         "https://melgenek.dev"
 date_format: "%-d %B %Y"
 
 # Google services
