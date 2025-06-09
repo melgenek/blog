@@ -1,11 +1,10 @@
 # Site settings
 title:       melgenek
-email:
 author:      Yev Melnyk
 description: "melgenek's blog"
 baseurl:     ""
 url:         "https://melgenek.github.io"
-date_format: "%-d %b, %Y"
+date_format: "%-d %B %Y"
 
 # Google services
 google_verification: "27hdqSsss2dY8Qwz0b8nG4OiLhoU14L0YGEPqIbAQ5k"
@@ -24,7 +23,6 @@ disqus_shortname: melgenek-github-io
 
 # Social icons
 github_username: melgenek
-twitter_username:
 linkedin_username: yevhenii-melnyk
 
 text:
@@ -32,8 +30,8 @@ text:
     newer: 'Newer'
     older: 'Older'
   post:
-    updated:        'Updated'
-    minute_read:    'minute read'
+    updated:  'Updated'
+    words:    'words'
   index:
     coming_soon: 'Coming soon...'
   og_locale: 'en_US'

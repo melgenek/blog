@@ -9,12 +9,17 @@ abbr {
 
 p {
   color: #333;
-  line-height: 1.8;
+  line-height: $line-height;
 }
 
 small,
 .small {
-  font-size: 0.707rem;
+  font-size: 0.8em;
+}
+
+.small svg {
+  width: 0.7em;
+  height: 0.7em;
 }
 
 sup {

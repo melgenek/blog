@@ -10,7 +10,7 @@ One of the domains to apply this new framework is data streaming, in particular 
 In this article I'm going to build a video streaming service and describe the threading model that is being used. 
 
 <nav>
-  <h4>Table of Contents</h4>
+  <span class="toc-title">Table of Contents</span>
   * TOC
   {:toc}
 </nav>

@@ -12,7 +12,7 @@ Unfortunately, I cannot draw. But I can code. So in this article will tell how t
 and API Gateway.
 
 <nav>
-  <h4>Table of Contents</h4>
+  <span class="toc-title">Table of Contents</span>
   * TOC
   {:toc}
 </nav>

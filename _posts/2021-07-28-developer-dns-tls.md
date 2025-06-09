@@ -10,7 +10,7 @@ Having self-signed TLS certificates makes browsers unhappy about the traffic, th
 While it took me more time than expected, I decided to write down the taken steps.
 
 <nav>
-  <h4>Table of Contents</h4>
+  <span class="toc-title">Table of Contents</span>
   * TOC
   {:toc}
 </nav>

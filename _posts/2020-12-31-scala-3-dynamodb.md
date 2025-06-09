@@ -15,7 +15,7 @@ a practical example of making DynamoDb more type-safe and convenient using [macr
 and a handful of implicits.
 
 <nav>
-  <h4>Table of Contents</h4>
+  <span class="toc-title">Table of Contents</span>
   * TOC
   {:toc}
 </nav>
