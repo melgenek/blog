@@ -7,10 +7,12 @@ url:         "https://melgenek.dev"
 date_format: "%-d %B %Y"
 
 # Google services
-google_verification: "27hdqSsss2dY8Qwz0b8nG4OiLhoU14L0YGEPqIbAQ5k"
+google_verification:
 # Use either direct GA implementation or set up GTM account
 # - using both will skew your data (leave blank to not use at all)
 google_analytics:
+
+cloudflare_beacon_token: "72a450cd6ee143938b9f1031f4411600"
 
 # Optional features
 show_social_icons:    true
