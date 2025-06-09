@@ -5,43 +5,63 @@ layout: default
 {% assign words = content | strip_html | number_of_words %}
 
 <div class="post-header mb2">
-  <h1>{{ page.title }}</h1>
-  <span class="post-meta small">
+    <h1>{{ page.title }}</h1>
+    <span class="post-meta small">
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-calendar-event" viewBox="0 0 16 16">
       <path d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
       <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
     </svg>
     {{ page.date | date: site.date_format }}
   </span>
-  <span class="post-meta small">
+    <span class="post-meta small">
     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
       <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
     </svg>
     {{ words }} {{ site.text.post.words }}
-  </span>
+    </span>
 </div>
 
 <article class="post-content">
-  {{ content }}
+    {{ content }}
 </article>
 
-{% if site.disqus_shortname %}
-  <div id="disqus_thread"></div>
-  <script type="text/javascript">
-    var disqus_shortname  = '{{ site.disqus_shortname }}';
+{% if site.disqus_shortname and page.disqus %}
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = '{{ site.disqus_shortname }}';
     var disqus_identifier = '{{ page.id }}';
     var disqus_title      = {{ page.title | jsonify }};
     var disqus_config = function () {
-      this.page.url = '{{ page.id }}';  // Replace PAGE_URL with your page's canonical URL variable
-      this.page.identifier = '{{ page.id }}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = '{{ page.id }}';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = '{{ page.id }}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 
-    setTimeout(function() {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
-      dsq.setAttribute('data-timestamp', +new Date());
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    setTimeout(function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+        dsq.setAttribute('data-timestamp', +new Date());
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     }, 2000);
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+{% else %}
+<script src="https://giscus.app/client.js"
+        data-repo="melgenek/blog"
+        data-repo-id="R_kgDOO4RE2A"
+        data-category="Blog comments"
+        data-category-id="DIC_kwDOO4RE2M4CrPZb"
+        data-mapping="og:title"
+        data-strict="1"
+        data-reactions-enabled="0"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light_protanopia"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
 {% endif %}

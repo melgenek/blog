@@ -5,6 +5,7 @@ summary: "After 8 years of development, Dotty is going to become Scala 3 soon.
 It's the right time to try out Scala 3 and its new features. In this article, I am going to show
 a practical example of making DynamoDb Java client more type-safe and convenient using macros, type class derivations, 
 extension methods, and a handful of implicits."
+disqus: true
 ---
 
 

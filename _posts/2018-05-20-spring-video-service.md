@@ -3,6 +3,7 @@ layout: post
 title: Building a video service using Spring Framework
 summary: "In this article we are building a video streaming service using the Spring WebFlux,
 comparing it to the Spring MVC and discovering the threading model that is used internally"
+disqus: true
 ---
 
 Some time ago a brand new WebFlux by Spring was released introducing the non-blocking reactive programming paradigm. 
