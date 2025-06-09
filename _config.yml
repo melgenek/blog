@@ -14,8 +14,6 @@ google_verification: "27hdqSsss2dY8Qwz0b8nG4OiLhoU14L0YGEPqIbAQ5k"
 google_analytics:
 
 # Optional features
-animated:             false
-show_related_posts:   false
 show_social_icons:    true
 extended_fonts: true
 enable_anchorjs: true
@@ -36,7 +34,6 @@ text:
   post:
     updated:        'Updated'
     minute_read:    'minute read'
-    related_posts:  'Related Posts'
   index:
     coming_soon: 'Coming soon...'
   og_locale: 'en_US'

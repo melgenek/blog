@@ -14,12 +14,6 @@
   padding-bottom: 0;
 }
 
-.post-link .post-title {
-  margin-top: 0;
-  font-weight: 600;
-  color: #333;
-}
-
 .post-footer {
   @extend .italic;
 
@@ -41,10 +35,6 @@
   padding: .25em 0;
   color: #7a7a7a;
   font-style: italic;
-}
-
-.related-post-title {
-  border-bottom: thin solid #f3f3f3;
 }
 
 .post-content {
