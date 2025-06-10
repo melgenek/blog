@@ -54,6 +54,7 @@ addEventListener("fetch", function (e) {
                     return response;
                 })
                 .catch(function (err) {
+                    console.log("Fetch error: ", err);
                     return new Response("Network error occurred", {
                         status: 408,
                         statusText: "Network error"
