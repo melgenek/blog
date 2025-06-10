@@ -17,7 +17,6 @@ cloudflare_beacon_token: "72a450cd6ee143938b9f1031f4411600"
 # Optional features
 show_social_icons:    true
 extended_fonts: true
-enable_anchorjs: true
 
 # Disqus post comments
 # (leave blank to disable Disqus)

@@ -2,16 +2,10 @@
   <div class="measure">
   </div>
 </footer>
-{% if site.enable_anchorjs %}<!-- AnchorJS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.0.0/anchor.min.js"></script>
-<script>
-    anchors.options.visible = 'touch';
-    anchors.add('article h2, article h3, article h4, article h5, article h6');
-</script>{% endif %}
 <script type="text/javascript">
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("{{ '/sw.js' | relative_url }}")
     }
 </script>
-<script src="/js/main.js"></script>
-<script src='/js/analytics.js?token={{ site.cloudflare_beacon_token }}'></script>
+<script async src="/js/main.js"></script>
+<script async src='/js/analytics.js?token={{ site.cloudflare_beacon_token }}'></script>

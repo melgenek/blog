@@ -32,3 +32,8 @@ body {
      -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
+
+h2:hover, h3:hover, h4:hover, h5:hover, h6:hover {
+  cursor: pointer;
+  color: #DFA000;
+}

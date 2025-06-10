@@ -4,3 +4,4 @@ node_modules/
 *.eml
 *.iml
 .sass-cache/
+.jekyll-metadata

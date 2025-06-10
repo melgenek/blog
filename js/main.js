@@ -1,6 +1,6 @@
 // http://stackoverflow.com/a/8024509/1848454
 window.onload = function () {
-    var codeBlocks = document.querySelectorAll('div.highlight');
+    const codeBlocks = document.querySelectorAll('pre.shiki code');
     codeBlocks.forEach(function (el) {
         el.addEventListener("dblclick", function () {
             if (window.getSelection && document.createRange) {
@@ -17,6 +17,18 @@ window.onload = function () {
                 textRange.select();
             }
             document.execCommand("copy");
+        });
+    });
+
+
+    document.querySelectorAll("article h2, article h3, article h4, article h5, article h6").forEach(header => {
+        header.addEventListener("click", () => {
+            const text = header.textContent.trim();
+            const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
+            header.id = id;
+
+            // Update the URL hash
+            window.location.hash = id;
         });
     });
 };
