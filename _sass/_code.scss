@@ -72,3 +72,7 @@ pre a:only-of-type::before {
 pre.shiki.everforest-light {
   border-radius: 14px;
 }
+
+p code {
+  word-break: break-word;
+}
