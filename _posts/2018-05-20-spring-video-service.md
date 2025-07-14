@@ -139,12 +139,12 @@ for you.
      alt="VisualVM"
      loading="lazy"
      srcset="
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/full_file_mvc.png&w=640 640w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/full_file_mvc.png&w=768 768w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/full_file_mvc.png&w=1024 1024w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/full_file_mvc.png&w=1366 1366w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/full_file_mvc.png&w=1600 1600w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/full_file_mvc.png&w=1920 1920w,
+       /cdn-cgi/image/width=640/images/spring-video-service/full_file_mvc.png 640w,
+       /cdn-cgi/image/width=768/images/spring-video-service/full_file_mvc.png 768w,
+       /cdn-cgi/image/width=1024/images/spring-video-service/full_file_mvc.png 1024w,
+       /cdn-cgi/image/width=1366/images/spring-video-service/full_file_mvc.png 1366w,
+       /cdn-cgi/image/width=1600/images/spring-video-service/full_file_mvc.png 1600w,
+       /cdn-cgi/image/width=1920/images/spring-video-service/full_file_mvc.png 1920w,
      "
      src="/images/spring-video-service/full_file_mvc.png">
 </p>
@@ -212,12 +212,12 @@ Now the server takes much less time to process requests and threads have opportu
      alt="VisualVM"
      loading="lazy"
      srcset="
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/chunk_file_mvc.png&w=640 640w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/chunk_file_mvc.png&w=768 768w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/chunk_file_mvc.png&w=1024 1024w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/chunk_file_mvc.png&w=1366 1366w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/chunk_file_mvc.png&w=1600 1600w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/chunk_file_mvc.png&w=1920 1920w,
+       /cdn-cgi/image/width=640/images/spring-video-service/chunk_file_mvc.png 640w,
+       /cdn-cgi/image/width=768/images/spring-video-service/chunk_file_mvc.png 768w,
+       /cdn-cgi/image/width=1024/images/spring-video-service/chunk_file_mvc.png 1024w,
+       /cdn-cgi/image/width=1366/images/spring-video-service/chunk_file_mvc.png 1366w,
+       /cdn-cgi/image/width=1600/images/spring-video-service/chunk_file_mvc.png 1600w,
+       /cdn-cgi/image/width=1920/images/spring-video-service/chunk_file_mvc.png 1920w,
      "
      src="/images/spring-video-service/chunk_file_mvc.png">
 </p>
@@ -300,6 +300,14 @@ client-server communication.
     <img width="100%"
      alt="Reactor"
      loading="lazy"
+     srcset="
+       /cdn-cgi/image/width=640/images/spring-video-service/reactor-my-intuition.png 640w,
+       /cdn-cgi/image/width=768/images/spring-video-service/reactor-my-intuition.png 768w,
+       /cdn-cgi/image/width=1024/images/spring-video-service/reactor-my-intuition.png 1024w,
+       /cdn-cgi/image/width=1366/images/spring-video-service/reactor-my-intuition.png 1366w,
+       /cdn-cgi/image/width=1600/images/spring-video-service/reactor-my-intuition.png 1600w,
+       /cdn-cgi/image/width=1920/images/spring-video-service/reactor-my-intuition.png 1920w,
+     "
      src="/images/spring-video-service/reactor-my-intuition.png">
 </p>
 
@@ -316,12 +324,12 @@ So they read events and handle them right away.
      alt="Reactor thread"
      loading="lazy"
      srcset="
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/reactor-thread.png&w=640 640w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/reactor-thread.png&w=768 768w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/reactor-thread.png&w=1024 1024w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/reactor-thread.png&w=1366 1366w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/reactor-thread.png&w=1600 1600w,
-       https://images.weserv.nl/?url=https://melgenek.dev/images/spring-video-service/reactor-thread.png&w=1920 1920w,
+       /cdn-cgi/image/width=640/images/spring-video-service/reactor-thread.png 640w,
+       /cdn-cgi/image/width=768/images/spring-video-service/reactor-thread.png 768w,
+       /cdn-cgi/image/width=1024/images/spring-video-service/reactor-thread.png 1024w,
+       /cdn-cgi/image/width=1366/images/spring-video-service/reactor-thread.png 1366w,
+       /cdn-cgi/image/width=1600/images/spring-video-service/reactor-thread.png 1600w,
+       /cdn-cgi/image/width=1920/images/spring-video-service/reactor-thread.png 1920w,
      "
      src="/images/spring-video-service/reactor-thread.png">
 </p>
